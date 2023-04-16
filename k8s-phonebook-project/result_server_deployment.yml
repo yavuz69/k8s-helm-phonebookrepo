@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-server-deployment
+  namespace: yavuz-namespace
+  labels:
+    app: result-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: result-server 
+  template:
+    metadata:
+      labels:
+        app: result-server
+    spec:
+      containers:
+        - name: result-server
+          image: yavuz69/phonebook-result-server
+          ports:
+          - containerPort: 80
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: mysecret
+          envFrom:
+          - configMapRef:
+              name: servers-configmap
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "100m"
+            limits:
+              memory: "750Mi"
+              cpu: "750m"

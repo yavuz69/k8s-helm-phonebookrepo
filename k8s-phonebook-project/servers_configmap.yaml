@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: servers-configmap
+    namespace: yavuz-namespace
+data:
+    MYSQL_DATABASE_HOST: web-mysql-svc.yavuz-namespace.svc.cluster.local
+    MYSQL_USER: yavuz69
+    MYSQL_DATABASE: phonebook
+    DEVOLOPER_NAME: Yavuz
+

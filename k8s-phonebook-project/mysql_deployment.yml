@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: yavuz-namespace
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: mysql 
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      volumes:
+        - name: phone-pv-storage
+          persistentVolumeClaim:
+            claimName: phone-pv-claim
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          ports:
+          - containerPort: 3306
+          volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: phone-pv-storage
+          # env:  # this part can use instead of secretRef
+          #   - name: MYSQL_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: mysql_admin_password
+          #         name: mysecret
+          #   - name: MYSQL_ROOT_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: mysql_root_password
+          #         name:  mysecret
+          envFrom:
+          - configMapRef:
+              name: database-configmap
+          - secretRef:
+              name: mysecret
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "100m"
+            limits:
+              memory: "750Mi"
+              cpu: "750m"    

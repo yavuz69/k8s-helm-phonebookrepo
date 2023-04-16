@@ -1,0 +1,2 @@
+webserver_image: yavuz69/phonebook-web-server
+resultserver_image: yavuz69/phonebook-result-server
